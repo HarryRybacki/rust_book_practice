@@ -11,9 +11,6 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Searching for '{}'", config.query);
-    println!("In file: {}", config.file_path);
-
     // report error and call process exit IF Err type is returned unexpectedly
     if let Err(e) = minigrep::run(config) {
         println!("Problem running application: {e}");

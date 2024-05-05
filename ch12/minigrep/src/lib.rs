@@ -18,10 +18,42 @@ impl Config {
     }
 }
 
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    let mut results = Vec::new();
+
+    // add any line matching search query to results vec
+    for line in contents.lines() {
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+
+    results
+}
+
 pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(config.file_path)?;
 
-    println!("With contents:\n{contents}");
+    // Search for and display any lines matching the qeury string
+    for line in search(&config.query, &contents) {
+        println!("{line}");
+    }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let contents = "\
+Rust:
+safe, fast, productive.
+Pikc three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, contents));
+    }
 }
